@@ -603,3 +603,71 @@ def sample_episode(env, policy):
 
     # YOUR CODE HERE
     return states, actions, rewards, dones
+
+def mc_prediction(policy, env, num_episodes, discount_factor=1.0, sampling_function=sample_episode):
+    """
+    Monte Carlo prediction algorithm. Calculates the value function
+    for a given policy using sampling.
+
+    Args:
+        policy: A policy which allows us to sample actions with its sample_action method.
+        env: OpenAI gym environment.
+        num_episodes: Number of episodes to sample.
+        discount_factor: Gamma discount factor.
+        sampling_function: Function that generates data from one episode.
+
+    Returns:
+        A dictionary that maps from state -> value.
+        The state is a tuple and the value is a float.
+    """
+
+    # Keeps track of current V and count of returns for each state
+    # to calculate an update.
+    V = defaultdict(float)
+    returns_count = defaultdict(float)
+
+    # YOUR CODE HERE
+    for i in tqdm(range(num_episodes)):
+        episode = sampling_function(env=env, policy=policy)
+        G = 0
+        for step in range(len(episode[0]) - 1, -1, -1):
+            state = episode[0][step]
+            G = discount_factor * G + episode[2][step]
+            returns_count[state].append(G)
+            V[state] = np.mean(returns_count[state])
+
+    return V
+
+def mc_prediction(policy, env, num_episodes, discount_factor=1.0, sampling_function=sample_episode):
+    """
+    Monte Carlo prediction algorithm. Calculates the value function
+    for a given policy using sampling.
+
+    Args:
+        policy: A policy which allows us to sample actions with its sample_action method.
+        env: OpenAI gym environment.
+        num_episodes: Number of episodes to sample.
+        discount_factor: Gamma discount factor.
+        sampling_function: Function that generates data from one episode.
+
+    Returns:
+        A dictionary that maps from state -> value.
+        The state is a tuple and the value is a float.
+    """
+
+    # Keeps track of current V and count of returns for each state
+    # to calculate an update.
+    V = defaultdict(float)
+    returns_count = defaultdict(float)
+
+    # YOUR CODE HERE
+    for i in tqdm(range(num_episodes)):
+        episode = sampling_function(env=env, policy=policy)
+        G = 0
+        for step in range(len(episode[0]) - 1, -1, -1):
+            state = episode[0][step]
+            G = discount_factor * G + episode[2][step]
+            returns_count[state] += 1
+            V[state] = G * 1/returns_count[state] + V[state] * ((returns_count[state] - 1) / returns_count[state])
+
+    return V
