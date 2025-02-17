@@ -195,9 +195,10 @@ def mc_importance_sampling(behavior_policy, target_policy, env, num_episodes, di
             G = discount_factor * G + episode[2][step]   
 
             # Compute importance sampling ratio
-            action = behavior_policy.sample_action(state)
-            b_a_given_s = behavior_policy.get_probs([state],[action])  # Probability of action under target policy
-            pi_a_given_s = target_policy.get_probs([state],[action])  # Probability of action under behavior policy
+            #action = behavior_policy.sample_action(state)
+            action = episode[1][step]
+            b_a_given_s = behavior_policy.get_probs([state],[action])[0]  # Probability of action under target policy
+            pi_a_given_s = target_policy.get_probs([state],[action])[0]  # Probability of action under behavior policy
             if b_a_given_s == 0:  # Avoid division by zero
                 break
             W *= pi_a_given_s / b_a_given_s
@@ -205,6 +206,7 @@ def mc_importance_sampling(behavior_policy, target_policy, env, num_episodes, di
             # Update value function using ordinary importance sampling formula
             returns_count[state] += 1
             V[state] += (W * G - V[state]) / returns_count[state]  # Incremental update
+            #V[state] += (W * G) / returns_count[state]  # Incremental update
 
     return V
 
