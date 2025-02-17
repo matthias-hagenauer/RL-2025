@@ -138,10 +138,8 @@ class RandomBlackjackPolicy(object):
         """
 
         # YOUR CODE HERE
-        probs = np.random.rand(len(states))
-        probs = probs/np.sum(probs)
-
-        return np.array(probs)
+        probs = np.full(len(states), 1 / len(states))  
+        return probs
 
     def sample_action(self, state):
         """
