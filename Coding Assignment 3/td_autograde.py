@@ -26,6 +26,7 @@ class EpsilonGreedyPolicy(object):
         
         # YOUR CODE HERE
         #raise NotImplementedError
+        
         if np.random.rand() < self.epsilon:
             return np.random.randint(len(self.Q[state]))
         else:
@@ -106,91 +107,6 @@ def q_learning(env, policy, Q, num_episodes, discount_factor=1.0, alpha=0.5):
         i = 0
         R = 0
         # YOUR CODE HERE
-        '''
-
-        episode = sample_episode(env=env, policy=policy)
-    
-        for step in range(len(episode[0]) - 1):
-            state = episode[0][step]
-            action = episode[1][step]
-            reward = episode[2][step]
-            done = episode[3][step]
-
-            next_state = episode[0][step + 1]
-
-            print(Q[next_state])
-            following_max_Q = max(Q[next_state])
-
-            Q[state][action] = Q[state][action] + alpha * (reward + discount_factor * following_max_Q - Q[state][action])
-
-            i += 1
-            R += reward
-        '''
-        S = env.reset()
-
-        while True:
-            A = policy.sample_action(S)
-            S1, reward, done, _ = env.step(A)
-            if not done:
-                Q[S,A] += alpha*(reward+discount_factor*np.max(Q[S1])-Q[S,A])
-            else:
-                Q[S,A] += alpha*(reward-Q[S,A])
-            S = S1
-            i+=1
-            if done:
-                break
-
-        stats.append((i, R))
-        
-    episode_lengths, episode_returns = zip(*stats)
-    return Q, (episode_lengths, episode_returns)
-
-def q_learning(env, policy, Q, num_episodes, discount_factor=1.0, alpha=0.5):
-    """
-    Q-Learning algorithm: Off-policy TD control. Finds the optimal greedy policy
-    while following an epsilon-greedy policy
-    
-    Args:
-        env: OpenAI environment.
-        policy: A behavior policy which allows us to sample actions with its sample_action method.
-        Q: Q value function
-        num_episodes: Number of episodes to run for.
-        discount_factor: Gamma discount factor.
-        alpha: TD learning rate.
-        
-    Returns:
-        A tuple (Q, stats).
-        Q is a numpy array Q[s,a] -> state-action value.
-        stats is a list of tuples giving the episode lengths and returns.
-    """
-    
-    # Keeps track of useful statistics
-    stats = []
-    
-    for i_episode in tqdm(range(num_episodes)):
-        i = 0
-        R = 0
-        # YOUR CODE HERE
-        '''
-
-        episode = sample_episode(env=env, policy=policy)
-    
-        for step in range(len(episode[0]) - 1):
-            state = episode[0][step]
-            action = episode[1][step]
-            reward = episode[2][step]
-            done = episode[3][step]
-
-            next_state = episode[0][step + 1]
-
-            print(Q[next_state])
-            following_max_Q = max(Q[next_state])
-
-            Q[state][action] = Q[state][action] + alpha * (reward + discount_factor * following_max_Q - Q[state][action])
-
-            i += 1
-            R += reward
-        '''
         S = env.reset()
 
         while True:
