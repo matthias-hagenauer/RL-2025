@@ -78,9 +78,8 @@ class EpsilonGreedyPolicy(object):
         # YOUR CODE HERE
         #raise NotImplementedError
         if random.random() < self.epsilon:
-            return random.randint(0, 1) 
+            return random.randint(0, 1)
         
-        # Use the Q-network to get the best action
         obs = torch.tensor(obs, dtype=torch.float32).unsqueeze(0)  
         with torch.no_grad():
             q_values = self.Q(obs) 
@@ -187,6 +186,8 @@ def run_episodes(train, Q, policy, memory, env, num_episodes, batch_size, discou
             
             # YOUR CODE HERE
             #raise NotImplementedError
+            epsilon = get_epsilon(global_steps)
+            policy.set_epsilon(epsilon) 
             action = policy.sample_action(state) 
             next_state, reward, done, _ = env.step(action) 
             
