@@ -128,9 +128,11 @@ def compute_targets(Q, rewards, next_states, dones, discount_factor):
     # YOUR CODE HERE
     #raise NotImplementedError
 
+    dones = dones.to(torch.bool)  
+
     with torch.no_grad():
         next_q_values = Q(next_states).max(dim=1, keepdim=True)[0] 
-        targets = rewards + (discount_factor * next_q_values * (1 - dones)) 
+        targets = rewards + (discount_factor * next_q_values * (~dones))
     
     return targets
 
